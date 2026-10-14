@@ -1,0 +1,7 @@
+numpy==2.0.2
+pandas==2.3.3
+psycopg==3.2.13
+psycopg-binary==3.2.13
+pytest==8.4.2
+python-dotenv==1.2.1
+requests==2.32.5

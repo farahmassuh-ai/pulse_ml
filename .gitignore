@@ -1,13 +1,27 @@
+# Python
 __pycache__/
 *.pyc
 .venv/
 env/
 .ipynb_checkpoints/
-data/
-*.csv
+.pytest_cache/
+.DS_Store
+
+# Secrets: never committed
+.env
+
+# Data lives in DVC; Git only gets the .dvc pointer files
+data/**
+!data/**/
+!data/**/*.dvc
+
+# Runtime output
+logs/
+mlruns/
+mlflow.db
+
+# Model and table artifacts
 *.parquet
 *.pkl
 *.pt
 *.h5
-.DS_Store
-.env
