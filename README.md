@@ -6,9 +6,9 @@ Training and tracking an ML model on real-world data: will an MBTA bus be more t
 
 Everything runs from the repository root.
 
-**1. Install the packages** (Python 3.9 or newer):
+**1. Install the packages** (Python 3.12; the versions in `requirements.txt` are pinned for it):
 ```bash
-python3 -m pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 **2. Create `.env`** from the example and fill in your own PostgreSQL login.
@@ -23,12 +23,12 @@ in `data/raw/`. This repo uses April, May and June 2026.
 
 **4. Create the database and table** (`transit` / `stop_events`, defined in `schema.sql`):
 ```bash
-python3 src/create_schema.py
+python src/create_schema.py
 ```
 
 **5. Load the historical files** (about 7.4 million rows, a few minutes):
 ```bash
-python3 src/load_historical.py
+python src/load_historical.py
 ```
 Per file: schema check, parse timestamps as Boston wall-clock time, compute `delay_min` and
 `late` (> 3 min), drop delays outside -30..+120 min (quarantined with a reason in
@@ -37,18 +37,18 @@ The verdict lines go to `logs/load_historical.log`. Rerunning inserts 0 rows.
 
 **6. Append today's planned service from the MBTA API**:
 ```bash
-python3 src/pull_daily.py
+python src/pull_daily.py
 ```
 API rows have `source = 'api'` and no `actual` yet. Verdict lines go to `logs/pull_daily.log`.
 
 **7. Run the tests**:
 ```bash
-python3 -m pytest
+python -m pytest
 ```
 
 **8. Split by time and freeze the splits with DVC** (Task 2, Step 3):
 ```bash
-python3 src/make_splits.py
+python src/make_splits.py
 dvc init        # once
 dvc add data/splits/train.parquet data/splits/val.parquet data/splits/test.parquet
 ```
@@ -57,7 +57,7 @@ files go into Git. The test split stays untouched until the final evaluation.
 
 **9. Train the two baselines, tracked in MLflow** (Task 2, Step 4):
 ```bash
-python3 src/train_baselines.py
+python src/train_baselines.py
 ```
 Configs are in `configs/baseline_majority.yaml` and `configs/baseline_logreg.yaml`.
 Runs are stored locally in `mlflow.db` and `mlruns/` and exported to `mlflow_runs.csv`.
