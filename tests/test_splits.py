@@ -40,3 +40,9 @@ def test_one_month_is_not_enough():
     df = _rows([("2026-06-01", "2026-06-01 08:00"), ("2026-06-20", "2026-06-20 08:00")])
     with pytest.raises(ValueError):
         split_by_time(df)
+
+
+def test_late_text_from_postgres_is_read_correctly():
+    df = _rows([("2026-06-15", "2026-06-15 08:00"), ("2026-06-15", "2026-06-15 09:00")])
+    df_f = prepare(df.assign(late=["f", "t"]).drop(columns=["day_of_week", "hour", "minute_of_day"]))
+    assert list(df_f["late"]) == [False, True]

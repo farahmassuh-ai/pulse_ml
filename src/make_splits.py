@@ -52,9 +52,8 @@ def prepare(df: pd.DataFrame) -> pd.DataFrame:
     df["scheduled"] = pd.to_datetime(df["scheduled"])
     df["scheduled_headway"] = pd.to_numeric(df["scheduled_headway"]).astype("Int64")
     df["time_point_order"] = pd.to_numeric(df["time_point_order"]).astype("Int64")
-    if df["late"].dtype == object:
-        df["late"] = df["late"].map({"t": True, "f": False, True: True, False: False})
-    df["late"] = df["late"].astype(bool)
+    # Postgres CSV writes booleans as 't'/'f'; compare as text so this works on any pandas.
+    df["late"] = df["late"].astype(str).str.lower().isin(["t", "true"])
     df["day_of_week"] = df["scheduled"].dt.dayofweek          # 0 = Monday
     df["hour"] = df["scheduled"].dt.hour
     df["minute_of_day"] = df["scheduled"].dt.hour * 60 + df["scheduled"].dt.minute
