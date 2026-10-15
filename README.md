@@ -46,6 +46,23 @@ API rows have `source = 'api'` and no `actual` yet. Verdict lines go to `logs/pu
 python3 -m pytest
 ```
 
+**8. Split by time and freeze the splits with DVC** (Task 2, Step 3):
+```bash
+python3 src/make_splits.py
+dvc init        # once
+dvc add data/splits/train.parquet data/splits/val.parquet data/splits/test.parquet
+```
+April-May -> train, June 1-15 -> validation, June 16-30 -> test. Only the `.dvc` pointer
+files go into Git. The test split stays untouched until the final evaluation.
+
+**9. Train the two baselines, tracked in MLflow** (Task 2, Step 4):
+```bash
+python3 src/train_baselines.py
+```
+Configs are in `configs/baseline_majority.yaml` and `configs/baseline_logreg.yaml`.
+Runs are stored locally in `mlflow.db` and `mlruns/` and exported to `mlflow_runs.csv`.
+To browse them: `mlflow ui --backend-store-uri sqlite:///mlflow.db`
+
 ## Layout
 ```
 src/        every script that runs: ingestion and preparation

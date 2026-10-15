@@ -1,0 +1,6 @@
+# Baseline 1: always predict the larger class of the training split.
+run_name: baseline_majority
+model: majority
+label: late
+# Not used by this model; listed so both baseline configs are comparable.
+features: [route_id, direction_id, stop_id, point_type, standard_type, hour, day_of_week]
